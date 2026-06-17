@@ -45,7 +45,7 @@ export default function Login() {
   }
 
   return (
-    <div style={{ minHeight:'100vh', background:'var(--dark)', display:'flex', alignItems:'center', justifyContent:'center', padding:20, position:'relative', overflow:'hidden' }}>
+    <div style={{ minHeight:'100vh', background:'var(--dark)', display:'flex', alignItems:'center', justifyContent:'center', padding:'40px 20px', position:'relative', overflow:'hidden', boxSizing:'border-box' }}>
       <div style={{ position:'absolute', top:'8%', left:'8%', width:320, height:320, borderRadius:'50%', background:'radial-gradient(circle, rgba(0,168,68,.14) 0%, transparent 70%)', pointerEvents:'none' }} />
       <div style={{ position:'absolute', bottom:'8%', right:'8%', width:280, height:280, borderRadius:'50%', background:'radial-gradient(circle, rgba(0,168,68,.09) 0%, transparent 70%)', pointerEvents:'none' }} />
       <div style={{ position:'absolute', inset:0, backgroundImage:'linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px)', backgroundSize:'60px 60px', pointerEvents:'none' }} />

@@ -62,7 +62,7 @@ export default function Register() {
   }
 
   return (
-    <div style={{ minHeight:'100vh', background:'var(--dark)', display:'flex', alignItems:'center', justifyContent:'center', padding:'40px 20px', position:'relative', overflow:'hidden' }}>
+    <div style={{ minHeight:'100vh', background:'var(--dark)', display:'flex', alignItems:'center', justifyContent:'center', padding:'40px 20px', position:'relative', overflow:'hidden', boxSizing:'border-box' }}>
       <div style={{ position:'absolute', top:'5%', right:'5%', width:300, height:300, borderRadius:'50%', background:'radial-gradient(circle, rgba(0,168,68,.12) 0%, transparent 70%)', pointerEvents:'none' }} />
       <div style={{ position:'absolute', bottom:'5%', left:'5%', width:260, height:260, borderRadius:'50%', background:'radial-gradient(circle, rgba(0,168,68,.08) 0%, transparent 70%)', pointerEvents:'none' }} />
       <div style={{ position:'absolute', inset:0, backgroundImage:'linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px)', backgroundSize:'60px 60px', pointerEvents:'none' }} />
@@ -81,7 +81,7 @@ export default function Register() {
         </div>
 
         <div style={{ background:'rgba(255,255,255,.04)', border:'1px solid var(--dark-border)', borderRadius:16, padding:'32px 28px', backdropFilter:'blur(16px)' }}>
-          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:14 }}>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(200px, 1fr))', gap:14 }}>
             <div style={{ gridColumn:'1/-1' }}>
               <Label>Ad Soyad *</Label>
               <DarkInput value={form.name} onChange={e => setForm({...form, name:e.target.value})} placeholder="Adınız Soyadınız" />
