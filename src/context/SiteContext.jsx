@@ -13,7 +13,7 @@ const DEFAULT_SETTINGS = {
   colorLight: '#00B548',
   stats: [
     { label: 'Aktif Üye', value: 248, suffix: '+' },
-    { label: 'Yıllık Deneyim', value: 41, suffix: '' },
+    { label: 'Yıllık Deneyim', value: 118, suffix: '' },
     { label: 'Branş', value: 4, suffix: '' },
     { label: 'Şampiyona', value: 17, suffix: '' },
   ],
