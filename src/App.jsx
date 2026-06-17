@@ -34,8 +34,8 @@ export default function App() {
   return (
     <SiteProvider>
       <StoreProvider>
-        <ShopProvider>
-          <AuthProvider>
+        <AuthProvider>
+          <ShopProvider>
             <ToastProvider>
               <BrowserRouter>
                 <AppInner />
@@ -61,8 +61,8 @@ export default function App() {
                 </Routes>
               </BrowserRouter>
             </ToastProvider>
-          </AuthProvider>
-        </ShopProvider>
+          </ShopProvider>
+        </AuthProvider>
       </StoreProvider>
     </SiteProvider>
   )
