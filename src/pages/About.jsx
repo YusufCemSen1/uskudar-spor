@@ -16,7 +16,7 @@ export default function About() {
         <div style={{ position: 'relative', zIndex: 1 }}>
           <div style={{ fontSize: 12, fontWeight: 800, color: 'rgba(255,255,255,.7)', letterSpacing: 3, marginBottom: 8 }} className="anim-trackIn">KULÜBܒMÜZ</div>
           <h1 className="anim-trackIn delay-1">🏛️ Hakkımızda</h1>
-          <p className="anim-trackIn delay-2">1985'ten bu yana Üsküdar'ın spor ailesi</p>
+          <p className="anim-trackIn delay-2">1908'ten bu yana Üsküdar'ın spor ailesi</p>
         </div>
       </div>
 

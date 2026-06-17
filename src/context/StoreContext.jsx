@@ -7,7 +7,7 @@ const DEFAULT_CONTACT = {
   phone: '0216 XXX XX XX', phone2: '', email: 'info@uskudaranadolu.com', email2: '',
   hours: 'Pzt–Cmt: 07:00–22:00 · Pazar: 09:00–18:00', mapEmbed: '',
   instagram: 'uskudaranadolusk', twitter: 'uskudaranadolusk', facebook: 'uskudaranadoluspor', youtube: 'uskudaranadolusporkulubu5591',
-  about: '1985 yılında kurulan Üsküdar Anadolu Spor Kulübü, İstanbul\'un köklü spor kulüplerinden biridir.',
+  about: '1908 yılında kurulan Üsküdar Anadolu Spor Kulübü, İstanbul\'un köklü spor kulüplerinden biridir.',
 }
 
 const DEFAULT_NEWS = [
