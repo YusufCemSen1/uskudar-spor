@@ -170,7 +170,7 @@ export default function Home() {
 
       {/* ── BRANŞ ŞERİDİ ─────────────────────────────── */}
       <div style={{ background:'var(--dark-2)', borderTop:'1px solid var(--dark-border)', borderBottom:'1px solid var(--dark-border)' }}>
-        <div style={{ maxWidth:1280, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(4,1fr)' }}>
+        <div className="home-branches-grid" style={{ maxWidth:1280, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(4,1fr)' }}>
           {BRANCHES.map((b, i) => (
             <Reveal key={b.name} direction="up" delay={i * 0.08} style={{ borderRight: i < BRANCHES.length-1 ? '1px solid var(--dark-border)' : 'none' }}>
               <div onClick={() => navigate('/branslar')} style={{ display:'flex', flexDirection:'column', alignItems:'center', padding:'40px 20px', cursor:'pointer', transition:'background .2s, transform .3s' }}
@@ -187,7 +187,7 @@ export default function Home() {
 
       {/* ── STAT BARI ─────────────────────────────── */}
       <div style={{ background:'var(--dark)', borderTop:'1px solid var(--dark-border)' }}>
-        <div style={{ maxWidth:1280, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(4,1fr)' }}>
+        <div className="home-stats-grid" style={{ maxWidth:1280, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(4,1fr)' }}>
           {settings.stats.map((s, i) => (
             <Reveal key={i} direction="up" delay={i * 0.1}>
               <StatCard stat={s} delay={i * .1} />
@@ -213,7 +213,7 @@ export default function Home() {
           </div>
           </Reveal>
 
-          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:24 }}>
+          <div className="home-news-grid" style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:24 }}>
             {/* Büyük ana haber */}
             {latest[0] && (
               <Reveal direction="left" style={{ gridRow:'span 2' }}>
@@ -405,7 +405,7 @@ export default function Home() {
             </Link>
           </div>
           </Reveal>
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:20 }}>
+          <div className="home-store-grid" style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:20 }}>
             {[...Array(4)].map((_,i) => (
               <Reveal key={i} direction="up" delay={i * 0.1}>
               <div className="card-shine" onClick={() => navigate('/magaza')}
@@ -434,7 +434,7 @@ export default function Home() {
       {/* ── FOOTER ─────────────────────────────── */}
       <footer style={{ background:'var(--dark)', borderTop:'1px solid var(--dark-border)', color:'#fff', padding:'72px 16px 32px' }}>
         <div style={{ maxWidth:1280, margin:'0 auto' }}>
-          <div style={{ display:'grid', gridTemplateColumns:'2fr 1fr 1fr 1fr', gap:48, marginBottom:56 }}>
+          <div className="home-footer-grid" style={{ display:'grid', gridTemplateColumns:'2fr 1fr 1fr 1fr', gap:48, marginBottom:56 }}>
             <div>
               <div style={{ display:'flex', alignItems:'center', gap:14, marginBottom:20 }}>
                 {!logoError && effectiveLogo
