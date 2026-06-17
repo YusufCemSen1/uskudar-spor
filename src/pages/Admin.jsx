@@ -426,31 +426,51 @@ function PlayersTab() {
 // ── ÜYELER ───────────────────────────────────────────────────────────────────
 function MembersTab() {
   const { members, updateMember, deleteMember } = useStore()
+  const { users, setKongreMember } = useAuth()
   const toast = useToast()
   const statusLabel = { active:'🟢 Aktif', pending:'🟡 Bekliyor', inactive:'🔴 Pasif' }
+
+  const getAuthUser = (m) => users.find(u => u.email === m.email)
+
   return (
     <div>
       <h3 style={{ margin:'0 0 16px' }}>Üyeler ({members.length})</h3>
+      <div style={{ background:'var(--green-pale)', border:'1px solid var(--green)', borderRadius:10, padding:'10px 16px', marginBottom:16, fontSize:13, color:'var(--green-dark)' }}>
+        🏛️ <strong>Kongre Üyesi</strong> atanan kullanıcılar mağazada <strong>%10 indirim</strong> kazanır.
+      </div>
       <div style={{ display:'grid', gap:10 }}>
-        {members.map(m => (
-          <div key={m.id} style={{ display:'flex', gap:12, alignItems:'center', background:'#fff', border:'1px solid var(--border)', borderRadius:8, padding:12 }}>
-            <div style={{ width:40, height:40, borderRadius:'50%', background:'var(--green-pale)', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:900, color:'var(--green-dark)', flexShrink:0 }}>
-              {m.name.substring(0,2).toUpperCase()}
+        {members.map(m => {
+          const authUser = getAuthUser(m)
+          const isKongre = authUser?.role === 'kongre'
+          return (
+            <div key={m.id} style={{ display:'flex', gap:12, alignItems:'center', background:'#fff', border:`1px solid ${isKongre ? 'var(--green)' : 'var(--border)'}`, borderRadius:8, padding:12 }}>
+              <div style={{ width:40, height:40, borderRadius:'50%', background: isKongre ? 'var(--green)' : 'var(--green-pale)', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:900, color: isKongre ? '#fff' : 'var(--green-dark)', flexShrink:0 }}>
+                {m.name.substring(0,2).toUpperCase()}
+              </div>
+              <div style={{ flex:1, minWidth:0 }}>
+                <div style={{ fontWeight:700, fontSize:14, display:'flex', alignItems:'center', gap:8 }}>
+                  {m.name}
+                  {isKongre && <span style={{ fontSize:10, background:'var(--green)', color:'#fff', padding:'2px 8px', borderRadius:20, fontWeight:800 }}>🏛️ KONGRE ÜYESİ</span>}
+                </div>
+                <div style={{ fontSize:12, color:'var(--text-muted)' }}>{m.email} · {m.branch} · {statusLabel[m.status]||m.status}</div>
+              </div>
+              <div style={{ display:'flex', gap:8, flexShrink:0, flexWrap:'wrap', justifyContent:'flex-end' }}>
+                {authUser && (
+                  <button className="btn btn-sm" style={{ background: isKongre ? '#fff3cd' : 'var(--green-pale)', color: isKongre ? '#856404' : 'var(--green-dark)', border: `1px solid ${isKongre ? '#ffc107' : 'var(--green)'}`, fontSize:11 }}
+                    onClick={() => { setKongreMember(authUser.id, !isKongre); toast(isKongre ? 'Kongre üyeliği kaldırıldı' : '🏛️ Kongre üyesi yapıldı') }}>
+                    {isKongre ? '🏛️ Kongre Kaldır' : '🏛️ Kongre Yap'}
+                  </button>
+                )}
+                <select className="form-input" style={{ fontSize:12, padding:'4px 8px', height:32 }} value={m.status} onChange={e => { updateMember(m.id,{status:e.target.value}); toast('Durum güncellendi') }}>
+                  <option value="active">Aktif</option>
+                  <option value="pending">Bekliyor</option>
+                  <option value="inactive">Pasif</option>
+                </select>
+                <button className="btn btn-sm" style={{ background:'#fee', color:'#c00' }} onClick={() => { if(confirm('Silinsin mi?')) { deleteMember(m.id); toast('Silindi') } }}>Sil</button>
+              </div>
             </div>
-            <div style={{ flex:1, minWidth:0 }}>
-              <div style={{ fontWeight:700, fontSize:14 }}>{m.name}</div>
-              <div style={{ fontSize:12, color:'var(--text-muted)' }}>{m.email} · {m.branch} · {statusLabel[m.status]||m.status}</div>
-            </div>
-            <div style={{ display:'flex', gap:8, flexShrink:0 }}>
-              <select className="form-input" style={{ fontSize:12, padding:'4px 8px', height:32 }} value={m.status} onChange={e => { updateMember(m.id,{status:e.target.value}); toast('Durum güncellendi') }}>
-                <option value="active">Aktif</option>
-                <option value="pending">Bekliyor</option>
-                <option value="inactive">Pasif</option>
-              </select>
-              <button className="btn btn-sm" style={{ background:'#fee', color:'#c00' }} onClick={() => { if(confirm('Silinsin mi?')) { deleteMember(m.id); toast('Silindi') } }}>Sil</button>
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

@@ -1,10 +1,12 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useShop } from '../context/ShopContext'
+import { useAuth } from '../context/AuthContext'
 import { useToast } from '../components/Toast'
 
 export default function Cart() {
-  const { cart, removeFromCart, updateQty, cartTotal } = useShop()
+  const { cart, removeFromCart, updateQty, cartTotal, getItemPrice, kongreDiscount } = useShop()
+  const { isKongre } = useAuth()
   const navigate = useNavigate()
   const toast = useToast()
 
@@ -53,7 +55,7 @@ export default function Cart() {
                     style={{ width:32, height:32, borderRadius:'50%', border:'1px solid var(--border)', background:'#fff', fontSize:18, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700 }}>+</button>
                 </div>
                 <div style={{ fontWeight:900, fontSize:16, minWidth:80, textAlign:'right', color:'var(--green-dark)' }}>
-                  {((item.discountPrice || item.price) * item.qty).toLocaleString('tr-TR')}₺
+                  {(getItemPrice(item) * item.qty).toLocaleString('tr-TR')}₺
                 </div>
                 <button onClick={() => { removeFromCart(item.key); toast('Ürün sepetten çıkarıldı') }}
                   style={{ background:'#fee2e2', border:'none', borderRadius:'50%', width:32, height:32, fontSize:16, cursor:'pointer', color:'#c00', flexShrink:0 }}>×</button>
@@ -64,6 +66,11 @@ export default function Cart() {
           {/* Özet */}
           <div className="glass-card anim-trackIn" style={{ borderRadius:14, padding:24, border:'1px solid var(--border)', position:'sticky', top:20, boxShadow:'0 8px 30px rgba(0,145,58,.1)' }}>
             <h3 style={{ margin:'0 0 20px', fontWeight:900 }}>Sipariş Özeti</h3>
+            {isKongre && (
+              <div style={{ background:'var(--green-pale)', border:'1px solid var(--green)', borderRadius:8, padding:'8px 12px', marginBottom:14, fontSize:12, color:'var(--green-dark)', fontWeight:700 }}>
+                🏛️ Kongre Üyesi — %10 indirim uygulandı!
+              </div>
+            )}
             <div style={{ display:'flex', justifyContent:'space-between', marginBottom:10, fontSize:14 }}>
               <span style={{ color:'var(--text-muted)' }}>Ara Toplam</span>
               <span style={{ fontWeight:700 }}>{cartTotal.toLocaleString('tr-TR')}₺</span>

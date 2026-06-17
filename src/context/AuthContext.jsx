@@ -33,7 +33,7 @@ export function AuthProvider({ children }) {
     // Normal kullanıcı
     const found = users.find(u => u.email === email && u.password === password)
     if (!found) return { success: false, message: 'E-posta veya şifre hatalı.' }
-    const u = { id: found.id, name: found.name, email: found.email, role: 'member', avatar: found.avatar || found.name.substring(0,2).toUpperCase() }
+    const u = { id: found.id, name: found.name, email: found.email, role: found.role || 'member', avatar: found.avatar || found.name.substring(0,2).toUpperCase() }
     sessionStorage.setItem('usk_user', JSON.stringify(u))
     setCurrentUser(u)
     return { success: true, user: u }
@@ -67,9 +67,16 @@ export function AuthProvider({ children }) {
   }
 
   const isAdmin = currentUser?.role === 'admin'
+  const isKongre = currentUser?.role === 'kongre'
+
+  const setKongreMember = (userId, isKongre) => {
+    const updatedUsers = users.map(u => u.id === userId ? { ...u, role: isKongre ? 'kongre' : 'member' } : u)
+    setUsers(updatedUsers)
+    save('usk_users', updatedUsers)
+  }
 
   return (
-    <AuthContext.Provider value={{ currentUser, login, register, logout, updateProfile, isAdmin }}>
+    <AuthContext.Provider value={{ currentUser, login, register, logout, updateProfile, isAdmin, isKongre, setKongreMember, users }}>
       {children}
     </AuthContext.Provider>
   )
