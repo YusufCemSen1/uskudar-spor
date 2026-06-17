@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext'
 import { useToast } from '../components/Toast'
 import Modal from '../components/Modal'
 
-const BACKEND = 'http://localhost:5169'  // .NET backend portu
+const BACKEND = 'https://uskudar-backend.onrender.com'
 
 // Sandbox test kartları
 const TEST_CARDS = [
