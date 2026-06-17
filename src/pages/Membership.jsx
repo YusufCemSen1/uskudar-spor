@@ -101,7 +101,7 @@ export default function Membership() {
       <div style={{ background: 'var(--green-dark)', padding: '32px 20px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <div style={{ color: 'rgba(255,255,255,.7)', fontSize: 12, fontWeight: 800, letterSpacing: 2, marginBottom: 20, textTransform: 'uppercase' }}>Başvuru Süreci</div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 0 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(140px,1fr))', gap: 12 }}>
             {STEPS.map((s, i) => (
               <div key={s.num} className="anim-trackIn hover-lift" style={{ padding: '0 20px 0 0', position: 'relative', animationDelay: `${i*.1}s` }}>
                 {i < 3 && <div style={{ position: 'absolute', top: 22, right: 0, width: '100%', height: 2, background: 'rgba(255,255,255,.15)' }} />}
@@ -117,10 +117,10 @@ export default function Membership() {
 
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 20px' }}>
         {/* Sekmeler */}
-        <div className="anim-trackIn" style={{ display: 'flex', gap: 0, marginBottom: 28, background: '#fff', borderRadius: 10, overflow: 'hidden', border: '1px solid var(--border)', boxShadow:'0 4px 16px rgba(0,0,0,.05)' }}>
+        <div className="anim-trackIn" style={{ display: 'flex', gap: 6, marginBottom: 28, flexWrap: 'wrap' }}>
           {TABS.map(t => (
             <button key={t.key} onClick={() => setActiveTab(t.key)}
-              style={{ flex: 1, padding: '14px 8px', background: activeTab===t.key?'var(--green)':'transparent', color: activeTab===t.key?'#fff':'var(--text-muted)', border: 'none', fontWeight: 700, fontSize: 13, cursor: 'pointer', transition: 'all .2s', borderRight: '1px solid var(--border)' }}>
+              style={{ flex: '1 1 120px', padding: '12px 8px', background: activeTab===t.key?'var(--green)':'#fff', color: activeTab===t.key?'#fff':'var(--text-muted)', border: '1px solid var(--border)', borderRadius: 10, fontWeight: 700, fontSize: 13, cursor: 'pointer', transition: 'all .2s' }}>
               {t.label}
             </button>
           ))}
@@ -199,7 +199,7 @@ export default function Membership() {
               {step === 1 && (
                 <div>
                   <div style={{ fontWeight: 800, fontSize: 16, color: 'var(--green-dark)', marginBottom: 20 }}>Kişisel Bilgiler</div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 14 }}>
                     <div className="form-group" style={{ gridColumn: '1/-1' }}>
                       <label className="form-label">Ad Soyad *</label>
                       <input className="form-input" value={form.name} onChange={f('name')} placeholder="Adınız Soyadınız" />
@@ -239,7 +239,7 @@ export default function Membership() {
               {step === 2 && (
                 <div>
                   <div style={{ fontWeight: 800, fontSize: 16, color: 'var(--green-dark)', marginBottom: 20 }}>İletişim & Adres Bilgileri</div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 14 }}>
                     <div className="form-group">
                       <label className="form-label">Telefon *</label>
                       <input className="form-input" value={form.phone} onChange={f('phone')} placeholder="0 5XX XXX XX XX" />
@@ -303,7 +303,7 @@ export default function Membership() {
               {step === 4 && (
                 <div>
                   <div style={{ fontWeight: 800, fontSize: 16, color: 'var(--green-dark)', marginBottom: 20 }}>Başvuru Özeti</div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 12, marginBottom: 20 }}>
                     {[
                       ['Ad Soyad', form.name],
                       ['TC Kimlik', form.tc],
