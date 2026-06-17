@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom'
 import { useShop } from '../context/ShopContext'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../components/Toast'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 export default function Cart() {
   const { cart, removeFromCart, updateQty, cartTotal, getItemPrice, kongreDiscount } = useShop()
   const { isKongre } = useAuth()
   const navigate = useNavigate()
   const toast = useToast()
+  const isMobile = useIsMobile()
 
   if (cart.length === 0) return (
     <div style={{ minHeight:'70vh', display:'flex', alignItems:'center', justifyContent:'center' }}>
@@ -30,7 +32,7 @@ export default function Cart() {
         </div>
       </div>
       <div className="page-wrap">
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 340px', gap:24, alignItems:'start' }}>
+        <div style={{ display:'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 340px', gap:24, alignItems:'start' }}>
           {/* Ürünler */}
           <div style={{ display:'grid', gap:14 }}>
             {cart.map((item, i) => (

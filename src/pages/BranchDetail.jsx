@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useStore } from '../context/StoreContext'
 import { useSite } from '../context/SiteContext'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 const BRANCH_STATIC = {
   futbol:     { icon: '⚽', name: 'Futbol',      color: '#00913A' },
@@ -20,6 +21,7 @@ export default function BranchDetail() {
   const { news, players } = useStore()
   const { settings } = useSite()
   const [activeTeam, setActiveTeam] = useState(null)
+  const isMobile = useIsMobile()
 
   const stat = BRANCH_STATIC[id]
   if (!stat) return <div style={{ padding: 80, textAlign: 'center' }}>Branş bulunamadı. <Link to="/branslar">Geri dön</Link></div>
@@ -65,7 +67,7 @@ export default function BranchDetail() {
           ))}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 32, alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 320px', gap: 32, alignItems: 'start' }}>
           <div>
             {/* KADROLAR */}
             <section style={{ marginBottom: 48 }}>

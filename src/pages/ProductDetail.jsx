@@ -4,6 +4,7 @@ import { useStore } from '../context/StoreContext'
 import { useShop } from '../context/ShopContext'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../components/Toast'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 function Stars({ rating, size=16 }) {
   return <span style={{ color:'#FF9800', fontSize:size }}>{[1,2,3,4,5].map(i=><span key={i}>{i<=Math.round(rating)?'★':'☆'}</span>)}</span>
@@ -23,6 +24,7 @@ export default function ProductDetail() {
   const [qty, setQty] = useState(1)
   const [reviewForm, setReviewForm] = useState({ rating:5, comment:'' })
   const [showReviewForm, setShowReviewForm] = useState(false)
+  const isMobile = useIsMobile()
 
   if (!product) return <div style={{ padding:60, textAlign:'center', color:'var(--text-muted)' }}>Ürün bulunamadı.</div>
 
@@ -56,7 +58,7 @@ export default function ProductDetail() {
 
       <div className="page-wrap">
         {/* Ürün ana bölüm */}
-        <div className="anim-ballIn hover-glow" style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:36, background:'#fff', borderRadius:10, padding:32, border:'1px solid var(--border)', marginBottom:24, boxShadow:'0 4px 20px rgba(0,0,0,.05)', transition:'box-shadow .3s' }}>
+        <div className="anim-ballIn hover-glow" style={{ display:'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap:36, background:'#fff', borderRadius:10, padding: isMobile ? 16 : 32, border:'1px solid var(--border)', marginBottom:24, boxShadow:'0 4px 20px rgba(0,0,0,.05)', transition:'box-shadow .3s' }}>
           {/* Görsel */}
           <div className="anim-trackIn">
             <div style={{ height:360, background:product.image?'transparent':'linear-gradient(135deg,var(--green-dark),var(--green-light))', borderRadius:10, display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden', position:'relative' }}>

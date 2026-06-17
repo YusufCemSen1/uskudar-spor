@@ -2,6 +2,7 @@ import React from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useStore } from '../context/StoreContext'
 import { useSite } from '../context/SiteContext'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 const BRANCH_COLOR = { Futbol:'#00913A', Basketbol:'#006B2B', Voleybol:'#00B548', 'Masa Tenisi':'#004d20' }
 const BRANCH_ID    = { Futbol:'futbol', Basketbol:'basketbol', Voleybol:'voleybol', 'Masa Tenisi':'masatenisi' }
@@ -140,6 +141,7 @@ function SportsBgIcons({ branch, color, logo }) {
 }
 
 function BioLayout({ color, image, icon, name, subtitle, tag, onBack, backLabel, stats, bio, achievements, achievementsLabel, branch, logo }) {
+  const isMobile = useIsMobile()
   return (
     <div>
       {/* Hero */}
@@ -165,7 +167,7 @@ function BioLayout({ color, image, icon, name, subtitle, tag, onBack, backLabel,
       </div>
 
       <div className="page-wrap" style={{ paddingTop:32 }}>
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 300px', gap:32, alignItems:'start' }}>
+        <div style={{ display:'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 300px', gap:32, alignItems:'start' }}>
           <div>
             {/* Biyografi */}
             {bio && (

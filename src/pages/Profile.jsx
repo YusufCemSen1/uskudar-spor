@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { useShop } from '../context/ShopContext'
 import { useStore } from '../context/StoreContext'
 import { useToast } from '../components/Toast'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 function Stars({ rating, size=14 }) {
   return <span style={{ color:'#FF9800', fontSize:size }}>{[1,2,3,4,5].map(i=><span key={i}>{i<=Math.round(rating)?'★':'☆'}</span>)}</span>
@@ -19,6 +20,7 @@ export default function Profile() {
   const [tab, setTab] = useState(searchParams.get('tab') || 'info')
   const [form, setForm] = useState({ name: currentUser?.name||'', email: currentUser?.email||'', phone: currentUser?.phone||'' })
   const [pwForm, setPwForm] = useState({ current:'', next:'', next2:'' })
+  const isMobile = useIsMobile()
 
   if (!currentUser) { navigate('/giris'); return null }
 
@@ -57,7 +59,7 @@ export default function Profile() {
         </div>
       </div>
       <div className="page-wrap">
-        <div style={{ display:'grid', gridTemplateColumns:'220px 1fr', gap:22 }}>
+        <div style={{ display:'grid', gridTemplateColumns: isMobile ? '1fr' : '220px 1fr', gap:22 }}>
           {/* Sol */}
           <div className="anim-trackIn">
             <div className="hover-glow" style={{ background:'#fff', borderRadius:12, border:'1px solid var(--border)', overflow:'hidden', marginBottom:14, boxShadow:'0 4px 20px rgba(0,0,0,.05)', transition:'box-shadow .3s' }}>
@@ -83,7 +85,7 @@ export default function Profile() {
             {tab === 'info' && (
               <div>
                 <div style={{ fontWeight:800, fontSize:17, marginBottom:22, color:'var(--green-dark)' }}>👤 Kişisel Bilgiler</div>
-                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:14 }}>
+                <div style={{ display:'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap:14 }}>
                   <div className="form-group" style={{ gridColumn:'1/-1' }}><label className="form-label">Ad Soyad *</label><input className="form-input" value={form.name} onChange={e=>setForm({...form,name:e.target.value})} /></div>
                   <div className="form-group"><label className="form-label">E-posta</label><input className="form-input" value={form.email} disabled style={{ background:'#f5f5f5' }} /></div>
                   <div className="form-group"><label className="form-label">Telefon</label><input className="form-input" value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})} placeholder="0 5XX XXX XX XX" /></div>

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useStore } from '../context/StoreContext'
 import { useToast } from '../components/Toast'
 import Reveal from '../components/Reveal'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 const DarkInput = ({ type='text', value, onChange, placeholder, textarea=false }) => {
   const [focused, setFocused] = useState(false)
@@ -26,6 +27,7 @@ export default function Contact() {
   const toast = useToast()
   const [form, setForm] = useState({ name:'', email:'', subject:'', message:'' })
   const [sent, setSent] = useState(false)
+  const isMobile = useIsMobile()
 
   const send = () => {
     if (!form.name || !form.email || !form.message) { toast('Tüm alanları doldurun', 'error'); return }
@@ -58,8 +60,8 @@ export default function Contact() {
         </div>
       </div>
 
-      <div style={{ maxWidth:1200, margin:'0 auto', padding:'60px 32px' }}>
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1.4fr', gap:32, alignItems:'start' }}>
+      <div style={{ maxWidth:1200, margin:'0 auto', padding: isMobile ? '32px 16px' : '60px 32px' }}>
+        <div style={{ display:'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1.4fr', gap:32, alignItems:'start' }}>
           {/* Left: Info */}
           <div style={{ display:'grid', gap:16 }}>
             <Reveal direction="left">
@@ -84,7 +86,7 @@ export default function Contact() {
             <Reveal direction="left" delay={0.1}>
               <div style={{ background:'rgba(255,255,255,.04)', border:'1px solid var(--dark-border)', borderRadius:14, padding:'24px' }}>
                 <div style={{ fontFamily:'var(--font-display)', fontSize:18, color:'#fff', letterSpacing:1, marginBottom:16 }}>SOSYAL MEDYA</div>
-                <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:10 }}>
+                <div style={{ display:'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap:10 }}>
                   {SOCIAL.map((s,i) => (
                     <div key={i} style={{ background:'rgba(0,168,68,.06)', border:'1px solid rgba(0,168,68,.12)', borderRadius:10, padding:'14px 10px', textAlign:'center', cursor:'pointer', transition:'all .2s' }}
                       onMouseOver={e => { e.currentTarget.style.background='rgba(0,168,68,.15)'; e.currentTarget.style.borderColor='var(--green)'; e.currentTarget.style.transform='translateY(-2px)' }}
@@ -110,7 +112,7 @@ export default function Contact() {
                   </div>
                 : <>
                     <div style={{ fontFamily:'var(--font-display)', fontSize:28, color:'#fff', letterSpacing:1, marginBottom:24 }}>MESAJ GÖNDER</div>
-                    <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16, marginBottom:16 }}>
+                    <div style={{ display:'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap:16, marginBottom:16 }}>
                       <div><Label>Ad Soyad *</Label><DarkInput value={form.name} onChange={e => setForm(f=>({...f,name:e.target.value}))} placeholder="Ahmet Yılmaz" /></div>
                       <div><Label>E-posta *</Label><DarkInput type="email" value={form.email} onChange={e => setForm(f=>({...f,email:e.target.value}))} placeholder="mail@ornek.com" /></div>
                     </div>

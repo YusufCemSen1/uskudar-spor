@@ -1,6 +1,7 @@
 import React from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useSite } from '../context/SiteContext'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 export default function About() {
   const navigate = useNavigate()
@@ -9,6 +10,7 @@ export default function About() {
   const milestones = about.milestones || []
   const values = about.values || []
   const board = about.board || []
+  const isMobile = useIsMobile()
 
   return (
     <div>
@@ -24,7 +26,7 @@ export default function About() {
 
         {/* Misyon & Vizyon */}
         {(about.mission || about.vision) && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginBottom: 48 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 24, marginBottom: 48 }}>
             {[
               { label: 'MİSYONUMUZ', icon: '🎯', text: about.mission },
               { label: 'VİZYONUMUZ',  icon: '🔭', text: about.vision },
