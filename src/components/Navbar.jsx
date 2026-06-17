@@ -42,6 +42,7 @@ export default function Navbar() {
   const navigate = useNavigate()
   const [profileOpen, setProfileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
   const dropRef = useRef()
 
   useEffect(() => {
@@ -153,13 +154,48 @@ export default function Navbar() {
               )}
             </Link>
             {!currentUser && (
-              <Link to="/kayit" className="btn btn-primary btn-sm" style={{ textDecoration: 'none', borderRadius: 8 }}>
+              <Link to="/kayit" className="btn btn-primary btn-sm navbar-cta-desktop" style={{ textDecoration: 'none', borderRadius: 8 }}>
                 Üye Ol
               </Link>
             )}
+            {/* Hamburger - sadece mobil */}
+            <button className="hamburger-btn" onClick={() => setMenuOpen(o => !o)} aria-label="Menü">
+              <span className={`ham-line${menuOpen ? ' open' : ''}`} />
+              <span className={`ham-line${menuOpen ? ' open' : ''}`} />
+              <span className={`ham-line${menuOpen ? ' open' : ''}`} />
+            </button>
           </div>
         </div>
       </nav>
+
+      {/* Mobil menü overlay */}
+      {menuOpen && (
+        <div className="mobile-menu" onClick={() => setMenuOpen(false)}>
+          <div className="mobile-menu-inner" onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+              <div style={{ fontWeight: 900, fontSize: 16, color: 'var(--green-dark)' }}>{settings.clubShort}</div>
+              <button onClick={() => setMenuOpen(false)} style={{ background: 'none', border: 'none', fontSize: 22, cursor: 'pointer', color: '#333' }}>✕</button>
+            </div>
+            {NAV_LINKS.map(l => (
+              <NavLink key={l.to} to={l.to} end={l.to === '/'}
+                className={({ isActive }) => 'mobile-nav-link' + (isActive ? ' active' : '')}
+                onClick={() => setMenuOpen(false)}>
+                {l.label}
+              </NavLink>
+            ))}
+            <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid #eee', display: 'flex', gap: 10 }}>
+              {currentUser ? (
+                <button onClick={() => { handleLogout(); setMenuOpen(false) }} style={{ flex: 1, padding: '10px', background: '#fee', border: '1px solid #fcc', borderRadius: 8, color: '#e53935', fontWeight: 700, cursor: 'pointer', fontSize: 14 }}>🚪 Çıkış Yap</button>
+              ) : (
+                <>
+                  <Link to="/giris" onClick={() => setMenuOpen(false)} style={{ flex: 1, padding: '10px', background: '#f5f5f5', border: '1px solid #ddd', borderRadius: 8, color: '#333', fontWeight: 700, textDecoration: 'none', textAlign: 'center', fontSize: 14 }}>Giriş Yap</Link>
+                  <Link to="/kayit" onClick={() => setMenuOpen(false)} style={{ flex: 1, padding: '10px', background: 'var(--green)', borderRadius: 8, color: '#fff', fontWeight: 700, textDecoration: 'none', textAlign: 'center', fontSize: 14 }}>Üye Ol</Link>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }
