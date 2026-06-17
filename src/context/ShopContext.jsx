@@ -1,19 +1,49 @@
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react'
 import { useAuth } from './AuthContext'
 
 const ShopContext = createContext(null)
+const BACKEND = 'https://uskudar-backend.onrender.com'
 
 function load(key, fallback) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback } catch { return fallback } }
 function save(key, value)    { try { localStorage.setItem(key, JSON.stringify(value)) } catch {} }
 
 export function ShopProvider({ children }) {
-  const { isKongre } = useAuth()
-  const [cart, setCart]         = useState(() => load('usk_cart', []))
+  const { isKongre, currentUser } = useAuth()
+  const [cart, setCart]           = useState(() => load('usk_cart', []))
   const [favorites, setFavorites] = useState(() => load('usk_favs', []))
-  const [orders, setOrders]     = useState(() => load('usk_orders', []))
+  const [orders, setOrders]       = useState(() => load('usk_orders', []))
   const [addresses, setAddresses] = useState(() => load('usk_addresses', []))
+  const syncTimeout = useRef(null)
 
-  useEffect(() => save('usk_cart', cart), [cart])
+  // Kullanıcı girişinde sunucudan sepeti çek
+  useEffect(() => {
+    if (!currentUser) return
+    const userId = String(currentUser.id)
+    fetch(`${BACKEND}/api/cart/${userId}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.items && data.items.length > 0) {
+          setCart(data.items)
+          save('usk_cart', data.items)
+        }
+      })
+      .catch(() => {})
+  }, [currentUser?.id])
+
+  // Sepet değişince sunucuya kaydet (debounced)
+  useEffect(() => {
+    save('usk_cart', cart)
+    if (!currentUser) return
+    clearTimeout(syncTimeout.current)
+    syncTimeout.current = setTimeout(() => {
+      fetch(`${BACKEND}/api/cart/${currentUser.id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: cart }),
+      }).catch(() => {})
+    }, 800)
+  }, [cart, currentUser?.id])
+
   useEffect(() => save('usk_favs', favorites), [favorites])
   useEffect(() => save('usk_orders', orders), [orders])
   useEffect(() => save('usk_addresses', addresses), [addresses])
@@ -32,7 +62,13 @@ export function ShopProvider({ children }) {
     if (qty < 1) { removeFromCart(key); return }
     setCart(prev => prev.map(i => i.key === key ? { ...i, qty } : i))
   }
-  const clearCart = () => setCart([])
+  const clearCart = () => {
+    setCart([])
+    if (currentUser) {
+      fetch(`${BACKEND}/api/cart/${currentUser.id}`, { method: 'DELETE' }).catch(() => {})
+    }
+  }
+
   const cartCount = cart.reduce((s, i) => s + i.qty, 0)
   const kongreDiscount = isKongre ? 0.10 : 0
   const getItemPrice = (i) => {
