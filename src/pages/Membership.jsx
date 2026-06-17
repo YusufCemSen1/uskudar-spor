@@ -181,14 +181,14 @@ export default function Membership() {
           <div className="anim-ballIn">
 
             {/* Adım göstergesi */}
-            <div className="anim-trackIn delay-1" style={{ display: 'flex', alignItems: 'center', gap: 0, marginBottom: 28, background: '#fff', borderRadius: 10, padding: '16px 24px', border: '1px solid var(--border)', boxShadow:'0 4px 16px rgba(0,0,0,.05)' }}>
+            <div className="anim-trackIn delay-1" style={{ display: 'flex', alignItems: 'center', gap: 0, marginBottom: 28, background: '#fff', borderRadius: 10, padding: '16px 12px', border: '1px solid var(--border)', boxShadow:'0 4px 16px rgba(0,0,0,.05)', overflowX:'auto' }}>
               {[['1','Kişisel Bilgiler'],['2','İletişim & Adres'],['3','Belgeler'],['4','Onay']].map(([n,l],i)=>(
-                <div key={n} style={{ display:'flex', alignItems:'center', flex:1 }}>
-                  <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-                    <div style={{ width:30, height:30, borderRadius:'50%', background:step>=Number(n)?'var(--green)':'#e0e0e0', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:800, fontSize:13, transition:'background .3s' }}>{step>Number(n)?'✓':n}</div>
-                    <span style={{ fontSize:12, fontWeight:step===Number(n)?700:400, color:step>=Number(n)?'var(--green-dark)':'var(--text-muted)', whiteSpace:'nowrap' }}>{l}</span>
+                <div key={n} style={{ display:'flex', alignItems:'center', flex:1, minWidth:0 }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:6, minWidth:0 }}>
+                    <div style={{ width:28, height:28, borderRadius:'50%', background:step>=Number(n)?'var(--green)':'#e0e0e0', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:800, fontSize:12, transition:'background .3s', flexShrink:0 }}>{step>Number(n)?'✓':n}</div>
+                    <span style={{ fontSize:11, fontWeight:step===Number(n)?700:400, color:step>=Number(n)?'var(--green-dark)':'var(--text-muted)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{l}</span>
                   </div>
-                  {i<3 && <div style={{ flex:1, height:2, background:step>Number(n)?'var(--green)':'#e0e0e0', margin:'0 10px', borderRadius:1 }} />}
+                  {i<3 && <div style={{ flex:1, minWidth:8, height:2, background:step>Number(n)?'var(--green)':'#e0e0e0', margin:'0 6px', borderRadius:1 }} />}
                 </div>
               ))}
             </div>

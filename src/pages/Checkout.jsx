@@ -185,7 +185,7 @@ export default function Checkout() {
         <div style={{ background:'#FFF8E1', borderTop:'3px solid #FF9800', padding:'12px 20px', display:'flex', alignItems:'center', gap:12, fontSize:13 }}>
           <span style={{ fontSize:20 }}>⚠️</span>
           <div>
-            <strong>Backend çalışmıyor.</strong> Gerçek ödeme için <code>uskudar-backend</code> klasöründe <code>npm install && npm run dev</code> çalıştırın.
+            <strong>Ödeme sistemi şu an başlatılıyor.</strong> Render üzerindeki backend uyku modundan çıkıyor olabilir, 30-60 saniye bekleyip sayfayı yenileyin.
             Şu an demo modunda devam edebilirsiniz.
           </div>
         </div>
@@ -205,7 +205,7 @@ export default function Checkout() {
           ))}
         </div>
 
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 300px', gap:22 }}>
+        <div className="checkout-grid" style={{ display:'grid', gridTemplateColumns:'1fr 300px', gap:22 }}>
           <div className="anim-trackIn delay-1">
             {/* Adım 1: Adres */}
             {step === 1 && (

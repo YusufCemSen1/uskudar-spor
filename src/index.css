@@ -1172,4 +1172,5 @@ tr:hover td { background: var(--green-pale) !important; }
   .navbar-links  { display: none !important; }
   .mobile-menu   { display: block !important; }
   .navbar-cta-desktop { display: none !important; }
+  .checkout-grid { grid-template-columns: 1fr !important; }
 }
