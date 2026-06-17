@@ -45,10 +45,10 @@ function ImageUploadField({ label, value, onChange }) {
 }
 
 export default function Membership() {
-  const { addMember } = useStore()
+  const { addMember, members } = useStore()
   const { currentUser } = useAuth()
   const toast = useToast()
-  const [activeTab, setActiveTab] = useState('apply') // plans | apply | query | faq
+  const [activeTab, setActiveTab] = useState(currentUser ? 'myinfo' : 'apply')
     const [openFaq, setOpenFaq] = useState(null)
   const [queryTC, setQueryTC] = useState('')
   const [queryResult, setQueryResult] = useState(null)
@@ -75,11 +75,17 @@ export default function Membership() {
     setActiveTab('plans')
   }
 
+  const myMembership = currentUser ? members.find(m => m.email === currentUser.email) : null
+
   const TABS = [
+    ...(currentUser ? [{ key:'myinfo', label:'👤 Üyeliğim' }] : []),
     { key:'apply', label:'📝 Online Başvuru' },
     { key:'query', label:'🔍 Üyelik Sorgula' },
     { key:'faq',   label:'❓ Sık Sorulan Sorular' },
   ]
+
+  const STATUS_LABEL = { active: '🟢 Aktif', pending: '🟡 Onay Bekliyor', inactive: '🔴 Pasif' }
+  const STATUS_COLOR = { active: '#00913A', pending: '#f59e0b', inactive: '#e53935' }
 
   return (
     <div style={{ background: 'var(--gray-bg)', minHeight: '100vh' }}>
@@ -119,6 +125,56 @@ export default function Membership() {
             </button>
           ))}
         </div>
+
+        {/* ÜYELİĞİM */}
+        {activeTab === 'myinfo' && (
+          <div className="anim-trackIn">
+            {myMembership ? (
+              <div style={{ background:'#fff', borderRadius:16, border:'1px solid var(--border)', padding:32, boxShadow:'0 4px 20px rgba(0,0,0,.06)' }}>
+                <div style={{ display:'flex', alignItems:'center', gap:20, marginBottom:28, paddingBottom:24, borderBottom:'1px solid var(--border)' }}>
+                  <div style={{ width:72, height:72, borderRadius:'50%', background:'var(--green)', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:900, fontSize:26, color:'#fff', flexShrink:0 }}>
+                    {currentUser.name?.slice(0,2).toUpperCase()}
+                  </div>
+                  <div>
+                    <div style={{ fontWeight:900, fontSize:22 }}>{myMembership.name}</div>
+                    <div style={{ fontSize:14, color:'var(--text-muted)', marginTop:4 }}>{myMembership.email}</div>
+                    <div style={{ marginTop:8 }}>
+                      <span style={{ fontSize:13, fontWeight:800, color: STATUS_COLOR[myMembership.status] || '#555', background:`${STATUS_COLOR[myMembership.status]}18`, padding:'4px 12px', borderRadius:20 }}>
+                        {STATUS_LABEL[myMembership.status] || myMembership.status}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))', gap:16 }}>
+                  {[
+                    { icon:'🏅', label:'Branş', value: myMembership.branch },
+                    { icon:'💳', label:'Plan', value: myMembership.plan || 'Standart' },
+                    { icon:'📅', label:'Üyelik Tarihi', value: myMembership.date ? new Date(myMembership.date).toLocaleDateString('tr-TR') : '-' },
+                    { icon:'📞', label:'Telefon', value: myMembership.phone || '-' },
+                  ].map(item => (
+                    <div key={item.label} style={{ background:'var(--green-pale)', borderRadius:12, padding:'16px 20px' }}>
+                      <div style={{ fontSize:20, marginBottom:8 }}>{item.icon}</div>
+                      <div style={{ fontSize:11, fontWeight:700, color:'var(--text-muted)', marginBottom:4, textTransform:'uppercase', letterSpacing:1 }}>{item.label}</div>
+                      <div style={{ fontWeight:800, fontSize:15, color:'var(--green-dark)' }}>{item.value}</div>
+                    </div>
+                  ))}
+                </div>
+                {myMembership.status === 'pending' && (
+                  <div style={{ marginTop:24, background:'#fffbeb', border:'1px solid #f59e0b', borderRadius:10, padding:'14px 18px', fontSize:13, color:'#92400e' }}>
+                    🕐 Başvurunuz inceleme aşamasında. Yönetim Kurulu kararı 5-10 iş günü içinde e-posta ile bildirilecektir.
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div style={{ textAlign:'center', padding:'48px 20px', background:'#fff', borderRadius:16, border:'1px solid var(--border)' }}>
+                <div style={{ fontSize:56, marginBottom:16 }}>🎽</div>
+                <h3 style={{ fontWeight:900, marginBottom:8 }}>Henüz üyelik kaydınız yok</h3>
+                <p style={{ color:'var(--text-muted)', marginBottom:20 }}>Üye olmak için başvuru formunu doldurun.</p>
+                <button className="btn btn-primary" onClick={() => setActiveTab('apply')}>Başvur →</button>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* BAŞVURU FORMU */}
         {activeTab === 'apply' && (

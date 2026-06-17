@@ -56,8 +56,7 @@ export default function Register() {
       setLoading(false)
       if (res.success) {
         addMember({ name: form.name, email: form.email, phone: form.phone || '', branch: form.branch || 'Futbol', plan: 'Standart', status: 'pending' })
-        toast('Kaydınız alındı! Hesabınız yönetici onayından sonra aktif olacak.')
-        navigate('/giris')
+        navigate('/basvuru-basarili')
       } else {
         toast(res.message, 'error')
       }

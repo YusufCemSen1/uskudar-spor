@@ -20,6 +20,7 @@ import Contact from './pages/Contact'
 import Admin from './pages/Admin'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import RegisterSuccess from './pages/RegisterSuccess'
 import BranchDetail from './pages/BranchDetail'
 import About from './pages/About'
 import BioPage from './pages/BioPage'
@@ -58,6 +59,7 @@ export default function App() {
                   <Route path="/panel"      element={<Admin />} />
                   <Route path="/giris"      element={<Login />} />
                   <Route path="/kayit"      element={<Register />} />
+                  <Route path="/basvuru-basarili" element={<RegisterSuccess />} />
                 </Routes>
               </BrowserRouter>
             </ToastProvider>
