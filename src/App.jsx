@@ -1,5 +1,6 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useTabTitle } from './hooks/useTabTitle'
 import { StoreProvider } from './context/StoreContext'
 import { ShopProvider } from './context/ShopContext'
 import { AuthProvider } from './context/AuthContext'
@@ -24,6 +25,11 @@ import About from './pages/About'
 import BioPage from './pages/BioPage'
 import Fixtures from './pages/Fixtures'
 
+function AppInner() {
+  useTabTitle()
+  return null
+}
+
 export default function App() {
   return (
     <SiteProvider>
@@ -32,6 +38,7 @@ export default function App() {
           <AuthProvider>
             <ToastProvider>
               <BrowserRouter>
+                <AppInner />
                 <Navbar />
                 <Routes>
                   <Route path="/"           element={<Home />} />
