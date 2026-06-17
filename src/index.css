@@ -35,6 +35,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { overflow-x: hidden; }
 body { font-family: var(--font-body); color: var(--text); background: #fff; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+#root { overflow-x: hidden; width: 100%; position: relative; }
 
 @keyframes fadeInDown  { from{opacity:0;transform:translateY(-24px)} to{opacity:1;transform:translateY(0)} }
 @keyframes fadeInUp    { from{opacity:0;transform:translateY(24px)}  to{opacity:1;transform:translateY(0)} }
@@ -1168,6 +1169,18 @@ tr:hover td { background: var(--green-pale) !important; }
 }
 
 @media (max-width: 768px) {
+  /* Yatay animasyonları kapat — overflow sebebi */
+  .rv-left, .rv-right {
+    transform: translateY(30px) !important;
+  }
+  .anim-slideLeft, .anim-slideRight {
+    animation: fadeInUp .5s ease both !important;
+  }
+  .anim-trackIn {
+    animation: fadeInUp .5s ease both !important;
+    border-left: none !important;
+  }
+
   /* Home page grids */
   .home-branches-grid { grid-template-columns: repeat(2,1fr) !important; }
   .home-stats-grid    { grid-template-columns: repeat(2,1fr) !important; }
