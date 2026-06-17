@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useSite } from '../context/SiteContext'
+import { useStore } from '../context/StoreContext'
 import { useToast } from '../components/Toast'
 
 const DarkInput = ({ type='text', value, onChange, placeholder, children, style={} }) => {
@@ -36,6 +37,7 @@ const Label = ({ children }) => (
 
 export default function Register() {
   const { register } = useAuth()
+  const { addMember } = useStore()
   const { effectiveLogo } = useSite()
   const toast = useToast()
   const navigate = useNavigate()
@@ -53,6 +55,7 @@ export default function Register() {
       const res = register(form)
       setLoading(false)
       if (res.success) {
+        addMember({ name: form.name, email: form.email, phone: form.phone || '', branch: form.branch || 'Futbol', plan: 'Standart', status: 'pending' })
         toast('Kaydınız alındı! Hesabınız yönetici onayından sonra aktif olacak.')
         navigate('/giris')
       } else {
