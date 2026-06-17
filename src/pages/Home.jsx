@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useStore } from '../context/StoreContext'
 import { useSite } from '../context/SiteContext'
+import { useAuth } from '../context/AuthContext'
 import Reveal from '../components/Reveal'
 
 const SOCIAL_ICONS = {
@@ -60,6 +61,7 @@ function StatCard({ stat, delay }) {
 export default function Home() {
   const { news, contact, fixtures } = useStore()
   const { settings, effectiveLogo } = useSite()
+  const { currentUser } = useAuth()
   const navigate = useNavigate()
   const [slide, setSlide] = useState(0)
   const [leavingSlide, setLeavingSlide] = useState(null)
@@ -140,8 +142,10 @@ export default function Home() {
               <div style={{ display:'flex', gap:14, flexWrap:'wrap' }}>
                 <button className="btn btn-primary btn-ripple" style={{ fontSize:15, padding:'14px 32px', borderRadius:12 }}
                   onClick={() => navigate('/haberler')}>{s.btn} →</button>
-                <button className="btn btn-outline" style={{ fontSize:15, padding:'14px 28px', borderRadius:12 }}
-                  onClick={() => navigate('/uyelik')}>Üye Ol</button>
+                {!currentUser && (
+                  <button className="btn btn-outline" style={{ fontSize:15, padding:'14px 28px', borderRadius:12 }}
+                    onClick={() => navigate('/kayit')}>Üye Ol</button>
+                )}
               </div>
               {/* Floating stats chips */}
               <div style={{ display:'flex', gap:20, marginTop:52, flexWrap:'wrap' }}>
@@ -368,11 +372,13 @@ export default function Home() {
               {settings.stats[0]?.value}+ aktif üyemizle birlikte sporu yaşa, şampiyonlara katıl.
             </p>
             <div style={{ display:'flex', gap:16, justifyContent:'center', flexWrap:'wrap' }}>
-              <button onClick={() => navigate('/uyelik')} style={{ background:'#fff', color:'var(--green-dark)', border:'none', padding:'16px 40px', borderRadius:12, fontSize:16, fontWeight:800, cursor:'pointer', transition:'all .25s', boxShadow:'0 8px 30px rgba(0,0,0,.2)', fontFamily:'var(--font-body)' }}
-                onMouseOver={e => { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.boxShadow='0 14px 40px rgba(0,0,0,.3)' }}
-                onMouseOut={e => { e.currentTarget.style.transform=''; e.currentTarget.style.boxShadow='0 8px 30px rgba(0,0,0,.2)' }}>
-                Üye Ol →
-              </button>
+              {!currentUser && (
+                <button onClick={() => navigate('/kayit')} style={{ background:'#fff', color:'var(--green-dark)', border:'none', padding:'16px 40px', borderRadius:12, fontSize:16, fontWeight:800, cursor:'pointer', transition:'all .25s', boxShadow:'0 8px 30px rgba(0,0,0,.2)', fontFamily:'var(--font-body)' }}
+                  onMouseOver={e => { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.boxShadow='0 14px 40px rgba(0,0,0,.3)' }}
+                  onMouseOut={e => { e.currentTarget.style.transform=''; e.currentTarget.style.boxShadow='0 8px 30px rgba(0,0,0,.2)' }}>
+                  Üye Ol →
+                </button>
+              )}
               <button onClick={() => navigate('/branslar')} style={{ background:'rgba(255,255,255,.12)', color:'#fff', border:'2px solid rgba(255,255,255,.4)', padding:'16px 36px', borderRadius:12, fontSize:16, fontWeight:700, cursor:'pointer', transition:'all .25s', backdropFilter:'blur(10px)', fontFamily:'var(--font-body)' }}
                 onMouseOver={e => { e.currentTarget.style.background='rgba(255,255,255,.2)'; e.currentTarget.style.borderColor='rgba(255,255,255,.7)' }}
                 onMouseOut={e => { e.currentTarget.style.background='rgba(255,255,255,.12)'; e.currentTarget.style.borderColor='rgba(255,255,255,.4)' }}>
