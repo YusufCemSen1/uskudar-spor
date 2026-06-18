@@ -25,6 +25,7 @@ import BranchDetail from './pages/BranchDetail'
 import About from './pages/About'
 import BioPage from './pages/BioPage'
 import Fixtures from './pages/Fixtures'
+import SiteFooter from './components/SiteFooter'
 
 function AppInner() {
   useTabTitle()
@@ -61,6 +62,7 @@ export default function App() {
                   <Route path="/kayit"      element={<Register />} />
                   <Route path="/basvuru-basarili" element={<RegisterSuccess />} />
                 </Routes>
+                <SiteFooter />
               </BrowserRouter>
             </ToastProvider>
           </ShopProvider>
