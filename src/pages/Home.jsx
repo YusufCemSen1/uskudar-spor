@@ -487,6 +487,15 @@ export default function Home() {
               <span style={{ fontSize:12, color:'var(--dark-muted)' }}>Türkiye'de kuruldu</span>
             </div>
           </div>
+          <div style={{ borderTop:'1px solid var(--dark-border)', paddingTop:14, marginTop:14, textAlign:'center', fontSize:12, color:'rgba(255,255,255,.3)' }}>
+            Tasarım &amp; Geliştirme{' '}
+            <a href="https://yusufcemsen1.github.io/" target="_blank" rel="noopener noreferrer"
+              style={{ color:'rgba(255,255,255,.55)', fontWeight:700, textDecoration:'none' }}
+              onMouseOver={e => e.target.style.color='#4ade80'}
+              onMouseOut={e => e.target.style.color='rgba(255,255,255,.55)'}>
+              Yusuf Cem Şen
+            </a>
+          </div>
         </div>
       </footer>
     </div>

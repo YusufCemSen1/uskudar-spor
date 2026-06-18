@@ -31,6 +31,15 @@ export default function Footer() {
         <div className="footer-bottom">
           © 2026 Üsküdar Anadolu Spor Kulübü. Tüm hakları saklıdır.
         </div>
+        <div style={{ textAlign: 'center', marginTop: 12, paddingTop: 12, borderTop: '1px solid rgba(255,255,255,.08)', fontSize: 12, color: 'rgba(255,255,255,.35)' }}>
+          Tasarım & Geliştirme{' '}
+          <a href="https://yusufcemsen1.github.io/" target="_blank" rel="noopener noreferrer"
+            style={{ color: 'rgba(255,255,255,.6)', fontWeight: 700, textDecoration: 'none', transition: 'color .2s' }}
+            onMouseOver={e => e.target.style.color = '#4ade80'}
+            onMouseOut={e => e.target.style.color = 'rgba(255,255,255,.6)'}>
+            Yusuf Cem Şen
+          </a>
+        </div>
       </div>
     </footer>
   )
