@@ -13,6 +13,10 @@ export default function Reveal({ children, className = '', style = {}, delay = 0
     return () => obs.disconnect()
   }, [])
 
+  // Mobilde yatay animasyonlar overflow yapar → up'a çevir
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768
+  const safeDir = isMobile && (direction === 'left' || direction === 'right') ? 'up' : direction
+
   const dirClass = {
     up:    'rv rv-up',
     down:  'rv rv-down',
@@ -20,7 +24,7 @@ export default function Reveal({ children, className = '', style = {}, delay = 0
     right: 'rv rv-right',
     scale: 'rv rv-scale',
     none:  'rv',
-  }[direction] ?? 'rv rv-up'
+  }[safeDir] ?? 'rv rv-up'
 
   return (
     <div ref={ref} className={`${dirClass} ${className}`} style={{ transitionDelay: delay ? `${delay}s` : undefined, ...style }}>
