@@ -398,7 +398,7 @@ export default function Home() {
               <div style={{ fontSize:11, fontWeight:700, color:'var(--green)', letterSpacing:3, textTransform:'uppercase', marginBottom:12 }}>ÜSküDAR ANADOLU STORE</div>
               <h2 style={{ fontFamily:'var(--font-display)', fontSize:'clamp(36px,5vw,58px)', lineHeight:.95, color:'#fff', letterSpacing:.5, margin:0 }}>ÖNE ÇIKAN ÜRÜNLER</h2>
             </div>
-            <Link to="/magaza" style={{ color:'var(--dark-muted)', fontWeight:600, fontSize:14, textDecoration:'none', display:'flex', alignItems:'center', gap:6, padding:'10px 20px', border:'1px solid var(--dark-border)', borderRadius:10, transition:'all .2s', color:'rgba(255,255,255,.6)' }}
+            <Link to="/magaza" style={{ color:'rgba(255,255,255,.6)', fontWeight:600, fontSize:14, textDecoration:'none', display:'flex', alignItems:'center', gap:6, padding:'10px 20px', border:'1px solid var(--dark-border)', borderRadius:10, transition:'all .2s' }}
               onMouseOver={e => { e.currentTarget.style.background='rgba(255,255,255,.05)'; e.currentTarget.style.color='#fff'; e.currentTarget.style.borderColor='rgba(255,255,255,.25)' }}
               onMouseOut={e => { e.currentTarget.style.background=''; e.currentTarget.style.color='rgba(255,255,255,.6)'; e.currentTarget.style.borderColor='var(--dark-border)' }}>
               Tüm Ürünler →
