@@ -31,7 +31,7 @@ export default function SiteFooter() {
             <p style={{ fontSize:13, lineHeight:1.9, color:'var(--dark-muted)', maxWidth:280 }}>{settings.footerAbout}</p>
             <div style={{ display:'flex', gap:10, marginTop:20 }}>
               {[
-                { name:'Instagram', url: contact?.instagram ? `https://www.instagram.com/${contact.instagram}/` : 'https://www.instagram.com/uskudaranadolusk/' },
+                { name:'Instagram', url: contact?.instagram ? `https://www.instagram.com/${contact.instagram}/` : 'https://www.instagram.com/anadoluskudar1908/' },
                 { name:'Twitter',   url: contact?.twitter   ? `https://twitter.com/${contact.twitter}` : '#' },
                 { name:'Facebook',  url: contact?.facebook  ? `https://facebook.com/${contact.facebook}` : '#' },
                 { name:'YouTube',   url: contact?.youtube   ? `https://youtube.com/@${contact.youtube}` : '#' },

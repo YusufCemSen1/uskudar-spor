@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import { doc, onSnapshot, setDoc } from 'firebase/firestore'
+import { doc, onSnapshot, setDoc, getDoc } from 'firebase/firestore'
 import { db } from '../firebase'
 
 const StoreContext = createContext(null)
@@ -8,7 +8,7 @@ const DEFAULT_CONTACT = {
   address: 'Üsküdar Spor Kompleksi, Beylerbeyi Mah. Spor Cad. No:1, Üsküdar / İstanbul',
   phone: '0216 XXX XX XX', phone2: '', email: 'info@uskudaranadolu.com', email2: '',
   hours: 'Pzt–Cmt: 07:00–22:00 · Pazar: 09:00–18:00', mapEmbed: '',
-  instagram: 'uskudaranadolusk', twitter: 'uskudaranadolusk', facebook: 'uskudaranadoluspor', youtube: 'uskudaranadolusporkulubu5591',
+  instagram: 'anadoluskudar1908', twitter: 'uskudaranadolusk', facebook: 'uskudaranadoluspor', youtube: 'uskudaranadolusporkulubu5591',
   about: '1908 yılında kurulan Üsküdar Anadolu Spor Kulübü, İstanbul\'un köklü spor kulüplerinden biridir.',
 }
 
