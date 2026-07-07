@@ -48,7 +48,7 @@ export default function SiteFooter() {
           {[
             ['SAYFALAR', [['Haberler','/haberler'],['Branşlar','/branslar'],['Hakkımızda','/hakkimizda'],['Üyelik','/uyelik'],['Mağaza','/magaza'],['İletişim','/iletisim']]],
             ['BRANŞLAR', [['Futbol','/branslar/futbol'],['Basketbol','/branslar/basketbol'],['Voleybol','/branslar/voleybol'],['Masa Tenisi','/branslar/masatenisi']]],
-            ['İLETİŞİM', [['📍 Üsküdar, İstanbul','#'],['📞 0216 XXX XX XX','#'],['✉️ info@uskudaranadolu.com','#'],['🕐 Pzt-Cmt: 07-22','#']]],
+            ['İLETİŞİM', [['📍 Üsküdar, İstanbul','#'],['📞 0545 812 1908','#'],['✉️ info@uskudaranadolu.com','#'],['🕐 Pzt-Cmt: 07-22','#']]],
           ].map(([title, links]) => (
             <div key={title}>
               <div style={{ fontSize:10, fontWeight:700, letterSpacing:2.5, color:'var(--dark-muted)', textTransform:'uppercase', marginBottom:20 }}>{title}</div>
