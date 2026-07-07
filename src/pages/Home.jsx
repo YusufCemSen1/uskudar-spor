@@ -59,7 +59,7 @@ function StatCard({ stat, delay }) {
 }
 
 export default function Home() {
-  const { news, contact, fixtures } = useStore()
+  const { news, contact, fixtures, products } = useStore()
   const { settings, effectiveLogo } = useSite()
   const { currentUser } = useAuth()
   const navigate = useNavigate()
@@ -406,21 +406,23 @@ export default function Home() {
           </div>
           </Reveal>
           <div className="home-store-grid" style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:20 }}>
-            {[...Array(4)].map((_,i) => (
-              <Reveal key={i} direction="up" delay={i * 0.1}>
-              <div className="card-shine" onClick={() => navigate('/magaza')}
+            {products.slice(0,4).map((p, i) => (
+              <Reveal key={p.id} direction="up" delay={i * 0.1}>
+              <div className="card-shine" onClick={() => navigate(`/magaza/${p.id}`)}
                 style={{ background:'var(--dark-3)', borderRadius:16, overflow:'hidden', border:'1px solid var(--dark-border)', cursor:'pointer', transition:'transform .3s ease, border-color .3s ease, box-shadow .3s ease' }}
                 onMouseOver={e => { e.currentTarget.style.transform='translateY(-6px)'; e.currentTarget.style.borderColor='rgba(0,168,68,.4)'; e.currentTarget.style.boxShadow='0 20px 50px rgba(0,0,0,.4)' }}
                 onMouseOut={e => { e.currentTarget.style.transform=''; e.currentTarget.style.borderColor=''; e.currentTarget.style.boxShadow='' }}>
                 <div style={{ height:160, background:`linear-gradient(135deg,#0a2a14,#1a5e2a)`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:56, position:'relative', overflow:'hidden' }}>
                   <div style={{ position:'absolute', inset:0, background:'radial-gradient(circle at 30% 50%, rgba(0,168,68,.15), transparent 70%)' }} />
-                  {['👕','🧥','🧢','⚽'][i]}
+                  {p.image
+                    ? <img src={p.image} alt={p.name} style={{ width:'100%', height:'100%', objectFit:'cover' }} />
+                    : <span>{p.icon}</span>}
                 </div>
                 <div style={{ padding:'18px 16px' }}>
-                  <div style={{ fontSize:11, color:'var(--green)', fontWeight:700, letterSpacing:1.5, textTransform:'uppercase', marginBottom:6 }}>Kulüp</div>
-                  <div style={{ fontWeight:700, fontSize:14, color:'#fff', marginBottom:10 }}>{['Resmi Forma','Kulüp Eşofmanı','Kulüp Şapkası','Resmi Maç Topu'][i]}</div>
+                  <div style={{ fontSize:11, color:'var(--green)', fontWeight:700, letterSpacing:1.5, textTransform:'uppercase', marginBottom:6 }}>{p.category}</div>
+                  <div style={{ fontWeight:700, fontSize:14, color:'#fff', marginBottom:10 }}>{p.name}</div>
                   <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
-                    <div style={{ fontFamily:'var(--font-display)', color:'var(--green-light)', fontSize:22 }}>{['450','680','180','350'][i]} ₺</div>
+                    <div style={{ fontFamily:'var(--font-display)', color:'var(--green-light)', fontSize:22 }}>{p.discountPrice || p.price} ₺</div>
                     <div style={{ fontSize:13, color:'var(--dark-muted)', background:'rgba(255,255,255,.05)', padding:'5px 12px', borderRadius:6 }}>Sepete Ekle</div>
                   </div>
                 </div>
