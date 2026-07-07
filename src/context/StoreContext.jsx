@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { doc, onSnapshot, setDoc } from 'firebase/firestore'
+import { db } from '../firebase'
 
 const StoreContext = createContext(null)
 
@@ -30,29 +32,20 @@ const DEFAULT_PRODUCTS = [
 ]
 
 const DEFAULT_PLAYERS = [
-  {
-    id: 1, branch: 'Futbol', team: 'A Takım',
-    players: [
-      { id: 101, name: 'Murat Şahin', number: 1, position: 'Kaleci', age: 28, image: null },
-      { id: 102, name: 'Emre Yıldız', number: 4, position: 'Defans', age: 24, image: null },
-      { id: 103, name: 'Burak Çelik', number: 9, position: 'Forvet', age: 26, image: null },
-      { id: 104, name: 'Kerem Aydın', number: 10, position: 'Orta Saha', age: 22, image: null },
-    ]
-  },
-  {
-    id: 2, branch: 'Basketbol', team: 'Erkek Takım',
-    players: [
-      { id: 201, name: 'Tarık Güneş', number: 5, position: 'Pivot', age: 27, image: null },
-      { id: 202, name: 'Serkan Kurt', number: 12, position: 'Guard', age: 23, image: null },
-    ]
-  },
-  {
-    id: 3, branch: 'Basketbol', team: 'Kadın Takım',
-    players: [
-      { id: 301, name: 'Ayşe Demir', number: 7, position: 'Forward', age: 25, image: null },
-      { id: 302, name: 'Elif Kara', number: 11, position: 'Guard', age: 21, image: null },
-    ]
-  },
+  { id: 1, branch: 'Futbol', team: 'A Takım', players: [
+    { id: 101, name: 'Murat Şahin', number: 1, position: 'Kaleci', age: 28, image: null },
+    { id: 102, name: 'Emre Yıldız', number: 4, position: 'Defans', age: 24, image: null },
+    { id: 103, name: 'Burak Çelik', number: 9, position: 'Forvet', age: 26, image: null },
+    { id: 104, name: 'Kerem Aydın', number: 10, position: 'Orta Saha', age: 22, image: null },
+  ]},
+  { id: 2, branch: 'Basketbol', team: 'Erkek Takım', players: [
+    { id: 201, name: 'Tarık Güneş', number: 5, position: 'Pivot', age: 27, image: null },
+    { id: 202, name: 'Serkan Kurt', number: 12, position: 'Guard', age: 23, image: null },
+  ]},
+  { id: 3, branch: 'Basketbol', team: 'Kadın Takım', players: [
+    { id: 301, name: 'Ayşe Demir', number: 7, position: 'Forward', age: 25, image: null },
+    { id: 302, name: 'Elif Kara', number: 11, position: 'Guard', age: 21, image: null },
+  ]},
 ]
 
 const DEFAULT_FIXTURES = [
@@ -67,66 +60,77 @@ const DEFAULT_MEMBERS = [
   { id: 2, name: 'Fatma Kaya', email: 'fatma@mail.com', phone: '0533 222 33 44', branch: 'Basketbol', plan: 'Standart', status: 'active', date: '2026-03-15' },
 ]
 
-function load(key, fallback) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback } catch { return fallback } }
-function save(key, value) { try { localStorage.setItem(key, JSON.stringify(value)) } catch {} }
+function lsLoad(key, fallback) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback } catch { return fallback } }
+function lsSave(key, value) { try { localStorage.setItem(key, JSON.stringify(value)) } catch {} }
+
+function fsSet(collection, docId, data) {
+  setDoc(doc(db, collection, docId), data).catch(() => {})
+}
 
 export function StoreProvider({ children }) {
-  const [news, setNews]         = useState(() => load('usk_news', DEFAULT_NEWS))
-  const [products, setProducts] = useState(() => load('usk_products', DEFAULT_PRODUCTS))
-  const [members, setMembers]   = useState(() => load('usk_members', DEFAULT_MEMBERS))
-  const [contact, setContact]   = useState(() => load('usk_contact', DEFAULT_CONTACT))
-  const [reviews, setReviews]   = useState(() => load('usk_reviews', []))
-  const [players, setPlayers]   = useState(() => load('usk_players', DEFAULT_PLAYERS))
-  const [fixtures, setFixtures] = useState(() => load('usk_fixtures', DEFAULT_FIXTURES))
+  const [news, setNews]         = useState(() => lsLoad('usk_news', DEFAULT_NEWS))
+  const [products, setProducts] = useState(() => lsLoad('usk_products', DEFAULT_PRODUCTS))
+  const [members, setMembers]   = useState(() => lsLoad('usk_members', DEFAULT_MEMBERS))
+  const [contact, setContact]   = useState(() => lsLoad('usk_contact', DEFAULT_CONTACT))
+  const [reviews, setReviews]   = useState(() => lsLoad('usk_reviews', []))
+  const [players, setPlayers]   = useState(() => lsLoad('usk_players', DEFAULT_PLAYERS))
+  const [fixtures, setFixtures] = useState(() => lsLoad('usk_fixtures', DEFAULT_FIXTURES))
 
-  useEffect(() => save('usk_news', news), [news])
-  useEffect(() => save('usk_products', products), [products])
-  useEffect(() => save('usk_members', members), [members])
-  useEffect(() => save('usk_contact', contact), [contact])
-  useEffect(() => save('usk_reviews', reviews), [reviews])
-  useEffect(() => save('usk_players', players), [players])
-  useEffect(() => save('usk_fixtures', fixtures), [fixtures])
+  // Firestore real-time listeners
+  useEffect(() => {
+    const subs = [
+      onSnapshot(doc(db, 'store', 'news'),     s => { if (s.exists()) { const d = s.data().items; setNews(d); lsSave('usk_news', d) } }),
+      onSnapshot(doc(db, 'store', 'products'), s => { if (s.exists()) { const d = s.data().items; setProducts(d); lsSave('usk_products', d) } }),
+      onSnapshot(doc(db, 'store', 'members'),  s => { if (s.exists()) { const d = s.data().items; setMembers(d); lsSave('usk_members', d) } }),
+      onSnapshot(doc(db, 'store', 'contact'),  s => { if (s.exists()) { const d = s.data(); delete d._v; setContact(d); lsSave('usk_contact', d) } }),
+      onSnapshot(doc(db, 'store', 'reviews'),  s => { if (s.exists()) { const d = s.data().items; setReviews(d); lsSave('usk_reviews', d) } }),
+      onSnapshot(doc(db, 'store', 'players'),  s => { if (s.exists()) { const d = s.data().items; setPlayers(d); lsSave('usk_players', d) } }),
+      onSnapshot(doc(db, 'store', 'fixtures'), s => { if (s.exists()) { const d = s.data().items; setFixtures(d); lsSave('usk_fixtures', d) } }),
+    ]
+    return () => subs.forEach(u => u())
+  }, [])
 
   // Haberler
-  const addNews    = (i) => setNews(p => [{ ...i, id: Date.now(), published: true }, ...p])
-  const updateNews = (id, i) => setNews(p => p.map(n => n.id === id ? { ...n, ...i } : n))
-  const deleteNews = (id) => setNews(p => p.filter(n => n.id !== id))
+  const addNews    = (i) => { const updated = [{ ...i, id: Date.now(), published: true }, ...news]; setNews(updated); lsSave('usk_news', updated); fsSet('store', 'news', { items: updated }) }
+  const updateNews = (id, i) => { const updated = news.map(n => n.id === id ? { ...n, ...i } : n); setNews(updated); lsSave('usk_news', updated); fsSet('store', 'news', { items: updated }) }
+  const deleteNews = (id) => { const updated = news.filter(n => n.id !== id); setNews(updated); lsSave('usk_news', updated); fsSet('store', 'news', { items: updated }) }
 
   // Ürünler
-  const addProduct    = (i) => setProducts(p => [{ ...i, id: Date.now(), rating: 0, reviewCount: 0 }, ...p])
-  const updateProduct = (id, i) => setProducts(p => p.map(x => x.id === id ? { ...x, ...i } : x))
-  const deleteProduct = (id) => setProducts(p => p.filter(x => x.id !== id))
+  const addProduct    = (i) => { const updated = [{ ...i, id: Date.now(), rating: 0, reviewCount: 0 }, ...products]; setProducts(updated); lsSave('usk_products', updated); fsSet('store', 'products', { items: updated }) }
+  const updateProduct = (id, i) => { const updated = products.map(x => x.id === id ? { ...x, ...i } : x); setProducts(updated); lsSave('usk_products', updated); fsSet('store', 'products', { items: updated }) }
+  const deleteProduct = (id) => { const updated = products.filter(x => x.id !== id); setProducts(updated); lsSave('usk_products', updated); fsSet('store', 'products', { items: updated }) }
 
   // Üyeler
-  const addMember    = (i) => setMembers(p => [{ ...i, id: Date.now(), date: new Date().toISOString().slice(0,10), status: 'pending' }, ...p])
-  const updateMember = (id, i) => setMembers(p => p.map(m => m.id === id ? { ...m, ...i } : m))
-  const deleteMember = (id) => setMembers(p => p.filter(m => m.id !== id))
+  const addMember    = (i) => { const updated = [{ ...i, id: Date.now(), date: new Date().toISOString().slice(0,10), status: 'pending' }, ...members]; setMembers(updated); lsSave('usk_members', updated); fsSet('store', 'members', { items: updated }) }
+  const updateMember = (id, i) => { const updated = members.map(m => m.id === id ? { ...m, ...i } : m); setMembers(updated); lsSave('usk_members', updated); fsSet('store', 'members', { items: updated }) }
+  const deleteMember = (id) => { const updated = members.filter(m => m.id !== id); setMembers(updated); lsSave('usk_members', updated); fsSet('store', 'members', { items: updated }) }
 
   // İletişim
-  const updateContact = (data) => setContact(prev => ({ ...prev, ...data }))
+  const updateContact = (data) => { const updated = { ...contact, ...data }; setContact(updated); lsSave('usk_contact', updated); fsSet('store', 'contact', { ...updated, _v: Date.now() }) }
 
   // Yorumlar
   const addReview = (productId, review) => {
     const r = { ...review, id: Date.now(), productId, date: new Date().toISOString().slice(0,10) }
-    setReviews(prev => [r, ...prev])
-    const allForProduct = [r, ...reviews.filter(x => x.productId === productId)]
+    const updated = [r, ...reviews]
+    setReviews(updated); lsSave('usk_reviews', updated); fsSet('store', 'reviews', { items: updated })
+    const allForProduct = updated.filter(x => x.productId === productId)
     const avg = allForProduct.reduce((s, x) => s + x.rating, 0) / allForProduct.length
     updateProduct(productId, { rating: Math.round(avg * 10) / 10, reviewCount: allForProduct.length })
   }
   const getReviews = (productId) => reviews.filter(r => r.productId === productId)
 
   // Fikstür
-  const addFixture    = (f) => setFixtures(p => [{ ...f, id: Date.now() }, ...p])
-  const updateFixture = (id, f) => setFixtures(p => p.map(x => x.id === id ? { ...x, ...f } : x))
-  const deleteFixture = (id) => setFixtures(p => p.filter(x => x.id !== id))
+  const addFixture    = (f) => { const updated = [{ ...f, id: Date.now() }, ...fixtures]; setFixtures(updated); lsSave('usk_fixtures', updated); fsSet('store', 'fixtures', { items: updated }) }
+  const updateFixture = (id, f) => { const updated = fixtures.map(x => x.id === id ? { ...x, ...f } : x); setFixtures(updated); lsSave('usk_fixtures', updated); fsSet('store', 'fixtures', { items: updated }) }
+  const deleteFixture = (id) => { const updated = fixtures.filter(x => x.id !== id); setFixtures(updated); lsSave('usk_fixtures', updated); fsSet('store', 'fixtures', { items: updated }) }
 
   // Oyuncu Kadroları
-  const addTeam = (team) => setPlayers(p => [...p, { ...team, id: Date.now(), players: [] }])
-  const updateTeam = (id, data) => setPlayers(p => p.map(t => t.id === id ? { ...t, ...data } : t))
-  const deleteTeam = (id) => setPlayers(p => p.filter(t => t.id !== id))
-  const addPlayer = (teamId, player) => setPlayers(p => p.map(t => t.id === teamId ? { ...t, players: [...t.players, { ...player, id: Date.now() }] } : t))
-  const updatePlayer = (teamId, playerId, data) => setPlayers(p => p.map(t => t.id === teamId ? { ...t, players: t.players.map(pl => pl.id === playerId ? { ...pl, ...data } : pl) } : t))
-  const deletePlayer = (teamId, playerId) => setPlayers(p => p.map(t => t.id === teamId ? { ...t, players: t.players.filter(pl => pl.id !== playerId) } : t))
+  const addTeam    = (team) => { const updated = [...players, { ...team, id: Date.now(), players: [] }]; setPlayers(updated); lsSave('usk_players', updated); fsSet('store', 'players', { items: updated }) }
+  const updateTeam = (id, data) => { const updated = players.map(t => t.id === id ? { ...t, ...data } : t); setPlayers(updated); lsSave('usk_players', updated); fsSet('store', 'players', { items: updated }) }
+  const deleteTeam = (id) => { const updated = players.filter(t => t.id !== id); setPlayers(updated); lsSave('usk_players', updated); fsSet('store', 'players', { items: updated }) }
+  const addPlayer  = (teamId, player) => { const updated = players.map(t => t.id === teamId ? { ...t, players: [...t.players, { ...player, id: Date.now() }] } : t); setPlayers(updated); lsSave('usk_players', updated); fsSet('store', 'players', { items: updated }) }
+  const updatePlayer = (teamId, playerId, data) => { const updated = players.map(t => t.id === teamId ? { ...t, players: t.players.map(pl => pl.id === playerId ? { ...pl, ...data } : pl) } : t); setPlayers(updated); lsSave('usk_players', updated); fsSet('store', 'players', { items: updated }) }
+  const deletePlayer = (teamId, playerId) => { const updated = players.map(t => t.id === teamId ? { ...t, players: t.players.filter(pl => pl.id !== playerId) } : t); setPlayers(updated); lsSave('usk_players', updated); fsSet('store', 'players', { items: updated }) }
 
   return (
     <StoreContext.Provider value={{

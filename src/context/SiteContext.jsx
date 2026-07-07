@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { doc, onSnapshot, setDoc } from 'firebase/firestore'
+import { db } from '../firebase'
 
 const SiteContext = createContext(null)
 
@@ -31,8 +33,6 @@ const DEFAULT_SETTINGS = {
     '🎽 Yeni sezon ürünleri mağazada',
   ],
   footerAbout: "1908'ten bu yana Üsküdar'ın spor ailesi. Futbol, basketbol, yüzme ve masa tenisi branşlarımızla gençlere sporu sevdiriyor, şampiyonlar yetiştiriyoruz.",
-
-  // Branş ayarları
   branches: {
     futbol: {
       desc: 'Kulübümüzün en köklü branşı. A takımı, kadın takımı ve altyapı kategorilerinde yüzlerce sporcumuz sahada.',
@@ -59,8 +59,6 @@ const DEFAULT_SETTINGS = {
       teams: ['Erkek Takım', 'Kadın Takım', 'Gençler'],
     },
   },
-
-  // Hakkımızda sayfası
   about: {
     mission: "Üsküdar halkına sporu sevdirmek, gençleri sağlıklı bir yaşam tarzına yönlendirmek ve ulusal arenada başarılı sporcular yetiştirmek.",
     vision: "Dört branşta Türkiye'nin en saygın spor kulüplerinden biri olmak; modern tesisler ve kaliteli kadromuzla sporda fark yaratmak.",
@@ -87,13 +85,12 @@ const DEFAULT_SETTINGS = {
   },
 }
 
-function load(key, fallback) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback } catch { return fallback } }
-function save(key, value) { try { localStorage.setItem(key, JSON.stringify(value)) } catch {} }
+function lsLoad(key, fallback) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback } catch { return fallback } }
+function lsSave(key, value) { try { localStorage.setItem(key, JSON.stringify(value)) } catch {} }
 
 function deepMerge(defaults, saved) {
   if (!saved) return defaults
   const result = { ...defaults, ...saved }
-  // Obje alanlarını derin birleştir
   for (const key of ['branches', 'about']) {
     if (defaults[key] && saved[key]) {
       result[key] = { ...defaults[key], ...saved[key] }
@@ -116,16 +113,30 @@ function deepMerge(defaults, saved) {
 }
 
 export function SiteProvider({ children }) {
-  const [settings, setSettings] = useState(() => deepMerge(DEFAULT_SETTINGS, load('usk_settings', null)))
+  const [settings, setSettings] = useState(() => deepMerge(DEFAULT_SETTINGS, lsLoad('usk_settings', null)))
 
-  useEffect(() => save('usk_settings', settings), [settings])
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, 'site', 'settings'), (snap) => {
+      if (snap.exists()) {
+        const merged = deepMerge(DEFAULT_SETTINGS, snap.data())
+        setSettings(merged)
+        lsSave('usk_settings', snap.data())
+      }
+    })
+    return unsub
+  }, [])
 
-  const updateSettings = (data) => setSettings(prev => ({ ...prev, ...data }))
-  const updateStat     = (i, data) => setSettings(prev => ({ ...prev, stats: prev.stats.map((s, idx) => idx === i ? { ...s, ...data } : s) }))
-  const updateSlide    = (i, data) => setSettings(prev => ({ ...prev, slides: prev.slides.map((s, idx) => idx === i ? { ...s, ...data } : s) }))
-  const updateTicker   = (items) => setSettings(prev => ({ ...prev, tickerItems: items }))
-  const updateBranch   = (id, data) => setSettings(prev => ({ ...prev, branches: { ...prev.branches, [id]: { ...prev.branches[id], ...data } } }))
-  const updateAbout    = (data) => setSettings(prev => ({ ...prev, about: { ...prev.about, ...data } }))
+  const _save = (data) => {
+    lsSave('usk_settings', data)
+    setDoc(doc(db, 'site', 'settings'), data).catch(() => {})
+  }
+
+  const updateSettings = (data) => { const s = { ...settings, ...data }; setSettings(s); _save(s) }
+  const updateStat     = (i, data) => { const s = { ...settings, stats: settings.stats.map((x, idx) => idx === i ? { ...x, ...data } : x) }; setSettings(s); _save(s) }
+  const updateSlide    = (i, data) => { const s = { ...settings, slides: settings.slides.map((x, idx) => idx === i ? { ...x, ...data } : x) }; setSettings(s); _save(s) }
+  const updateTicker   = (items) => { const s = { ...settings, tickerItems: items }; setSettings(s); _save(s) }
+  const updateBranch   = (id, data) => { const s = { ...settings, branches: { ...settings.branches, [id]: { ...settings.branches[id], ...data } } }; setSettings(s); _save(s) }
+  const updateAbout    = (data) => { const s = { ...settings, about: { ...settings.about, ...data } }; setSettings(s); _save(s) }
 
   useEffect(() => {
     document.documentElement.style.setProperty('--green', settings.colorGreen)
@@ -134,9 +145,10 @@ export function SiteProvider({ children }) {
   }, [settings.colorGreen, settings.colorDark, settings.colorLight])
 
   const effectiveLogo = settings.logo || '/logo.png'
+  const contact = settings.contact || null
 
   return (
-    <SiteContext.Provider value={{ settings, updateSettings, updateStat, updateSlide, updateTicker, updateBranch, updateAbout, effectiveLogo }}>
+    <SiteContext.Provider value={{ settings, updateSettings, updateStat, updateSlide, updateTicker, updateBranch, updateAbout, effectiveLogo, contact }}>
       {children}
     </SiteContext.Provider>
   )
