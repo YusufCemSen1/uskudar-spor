@@ -194,18 +194,21 @@ function ProductsTab() {
   const { products, addProduct, updateProduct, deleteProduct } = useStore()
   const toast = useToast()
   const [editing, setEditing] = useState(null)
-  const empty = { name:'', desc:'', icon:'📦', price:'', discountPrice:'', stock:'', category:'Giyim', image:null, sizes:[], colors:[] }
+  const empty = { name:'', desc:'', icon:'📦', price:'', discountPrice:'', stock:'', category:'Giyim', images:[], sizes:[], colors:[] }
   const [form, setForm] = useState(empty)
   const [sizesInput, setSizesInput] = useState('')
   const [colorsInput, setColorsInput] = useState('')
 
   const openNew  = () => { setForm(empty); setSizesInput(''); setColorsInput(''); setEditing('new') }
-  const openEdit = (item) => { setForm({ ...item }); setSizesInput(item.sizes?.join(',') || ''); setColorsInput(item.colors?.join(',') || ''); setEditing(item.id) }
+  const openEdit = (item) => {
+    const images = item.images || (item.image ? [item.image] : [])
+    setForm({ ...item, images }); setSizesInput(item.sizes?.join(',') || ''); setColorsInput(item.colors?.join(',') || ''); setEditing(item.id)
+  }
   const cancel   = () => setEditing(null)
 
   const save = () => {
     if (!form.name.trim() || !form.price) { toast('İsim ve fiyat zorunlu', 'error'); return }
-    const data = { ...form, price: parseFloat(form.price), discountPrice: form.discountPrice ? parseFloat(form.discountPrice) : null, stock: parseInt(form.stock) || 0, sizes: sizesInput.split(',').map(s => s.trim()).filter(Boolean), colors: colorsInput.split(',').map(s => s.trim()).filter(Boolean) }
+    const data = { ...form, price: parseFloat(form.price), discountPrice: form.discountPrice ? parseFloat(form.discountPrice) : null, stock: parseInt(form.stock) || 0, sizes: sizesInput.split(',').map(s => s.trim()).filter(Boolean), colors: colorsInput.split(',').map(s => s.trim()).filter(Boolean), image: form.images?.[0] || null }
     if (editing === 'new') addProduct(data); else updateProduct(editing, data)
     toast(editing === 'new' ? 'Ürün eklendi ✓' : 'Güncellendi ✓')
     cancel()
@@ -218,7 +221,7 @@ function ProductsTab() {
         <h3 style={{ margin:0 }}>{editing === 'new' ? 'Yeni Ürün' : 'Ürünü Düzenle'}</h3>
       </div>
       <div style={{ display:'grid', gap:14 }}>
-        <ImageUpload value={form.image} onChange={v => setForm(f => ({ ...f, image:v }))} label="Ürün Fotoğrafı (maks 3MB)" />
+        <MultiImageUpload images={form.images || []} onChange={imgs => setForm(f => ({ ...f, images: imgs }))} />
         <div style={{ display:'grid', gridTemplateColumns:'1fr 80px', gap:12 }}>
           <div className="form-group"><label className="form-label">Ürün Adı *</label><input className="form-input" value={form.name} onChange={e => setForm(f => ({ ...f, name:e.target.value }))} /></div>
           <div className="form-group"><label className="form-label">İkon</label><input className="form-input" value={form.icon} onChange={e => setForm(f => ({ ...f, icon:e.target.value }))} /></div>
@@ -253,7 +256,7 @@ function ProductsTab() {
         {products.map(item => (
           <div key={item.id} style={{ display:'flex', gap:12, alignItems:'center', background:'#fff', border:'1px solid var(--border)', borderRadius:8, padding:12 }}>
             <div style={{ width:56, height:56, borderRadius:6, overflow:'hidden', flexShrink:0, background:'var(--green-pale)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:24 }}>
-              {item.image ? <img src={item.image} style={{ width:'100%', height:'100%', objectFit:'cover' }} /> : item.icon}
+              {(item.images?.[0] || item.image) ? <img src={item.images?.[0] || item.image} style={{ width:'100%', height:'100%', objectFit:'cover' }} /> : item.icon}
             </div>
             <div style={{ flex:1, minWidth:0 }}>
               <div style={{ fontWeight:700, fontSize:14 }}>{item.name}</div>

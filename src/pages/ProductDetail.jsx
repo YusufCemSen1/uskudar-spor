@@ -22,12 +22,14 @@ export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState('')
   const [selectedColor, setSelectedColor] = useState('')
   const [qty, setQty] = useState(1)
+  const [activeImg, setActiveImg] = useState(0)
   const [reviewForm, setReviewForm] = useState({ rating:5, comment:'' })
   const [showReviewForm, setShowReviewForm] = useState(false)
   const isMobile = useIsMobile()
 
   if (!product) return <div style={{ padding:60, textAlign:'center', color:'var(--text-muted)' }}>Ürün bulunamadı.</div>
 
+  const images = product.images?.length ? product.images : (product.image ? [product.image] : [])
   const reviews = getReviews(product.id)
   const price = product.discountPrice || product.price
   const discount = product.discountPrice ? Math.round((1-product.discountPrice/product.price)*100) : null
@@ -61,9 +63,9 @@ export default function ProductDetail() {
         <div className="anim-ballIn hover-glow" style={{ display:'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap:36, background:'#fff', borderRadius:10, padding: isMobile ? 16 : 32, border:'1px solid var(--border)', marginBottom:24, boxShadow:'0 4px 20px rgba(0,0,0,.05)', transition:'box-shadow .3s' }}>
           {/* Görsel */}
           <div className="anim-trackIn">
-            <div style={{ height:360, background:product.image?'transparent':'linear-gradient(135deg,var(--green-dark),var(--green-light))', borderRadius:10, display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden', position:'relative' }}>
-              {product.image
-                ? <img src={product.image} style={{ width:'100%', height:'100%', objectFit:'cover', transition:'transform .4s' }} onMouseOver={e=>e.target.style.transform='scale(1.06)'} onMouseOut={e=>e.target.style.transform='scale(1)'} />
+            <div style={{ height:360, background:images.length?'transparent':'linear-gradient(135deg,var(--green-dark),var(--green-light))', borderRadius:10, display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden', position:'relative' }}>
+              {images.length
+                ? <img src={images[activeImg]} style={{ width:'100%', height:'100%', objectFit:'cover', transition:'transform .4s' }} onMouseOver={e=>e.target.style.transform='scale(1.06)'} onMouseOut={e=>e.target.style.transform='scale(1)'} />
                 : <span style={{ fontSize:100, animation:'float 3s ease-in-out infinite' }}>{product.icon}</span>
               }
               {discount && <div className="anim-jerseyPop" style={{ position:'absolute', top:14, left:14, background:'#e53935', color:'#fff', fontSize:13, fontWeight:800, padding:'5px 12px', borderRadius:5 }}>-%{discount}</div>}
@@ -72,6 +74,16 @@ export default function ProductDetail() {
                 {fav ? '❤️' : '🤍'}
               </button>
             </div>
+            {images.length > 1 && (
+              <div style={{ display:'flex', gap:8, marginTop:10, overflowX:'auto', paddingBottom:4 }}>
+                {images.map((img, i) => (
+                  <div key={i} onClick={() => setActiveImg(i)}
+                    style={{ width:64, height:64, borderRadius:6, overflow:'hidden', flexShrink:0, cursor:'pointer', border:`2px solid ${activeImg===i?'var(--green)':'var(--border)'}`, transition:'border-color .15s' }}>
+                    <img src={img} style={{ width:'100%', height:'100%', objectFit:'cover' }} />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Bilgiler */}
