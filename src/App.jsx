@@ -32,7 +32,27 @@ function AppInner() {
   return null
 }
 
+function SiteClosedOverlay() {
+  return (
+    <div style={{ position:'fixed', inset:0, zIndex:99999, background:'#0a1a0f', display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', gap:24, padding:24 }}>
+      <div style={{ fontSize:64 }}>🔒</div>
+      <div style={{ textAlign:'center', maxWidth:480 }}>
+        <div style={{ width:60, height:3, background:'#00a844', margin:'0 auto 20px', borderRadius:2 }} />
+        <div style={{ fontSize:18, fontWeight:700, color:'#ff4d4d', marginBottom:12 }}>Site Geçici Olarak Kullanıma Kapalıdır</div>
+        <div style={{ fontSize:14, color:'rgba(255,255,255,.65)', lineHeight:1.8 }}>
+          Web sitesi yapım ve tasarım ücreti ödenmediği için site geçici olarak erişime kapatılmıştır.<br />
+          Bilgi için kulüple iletişime geçiniz.
+        </div>
+        <div style={{ marginTop:24, fontSize:13, color:'rgba(255,255,255,.4)' }}>📞 0545 812 1908</div>
+      </div>
+    </div>
+  )
+}
+
+const SITE_CLOSED = true
+
 export default function App() {
+  if (SITE_CLOSED) return <SiteClosedOverlay />
   return (
     <SiteProvider>
       <StoreProvider>
